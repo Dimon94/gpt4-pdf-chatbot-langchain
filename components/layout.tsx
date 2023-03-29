@@ -7,7 +7,12 @@ interface LayoutProps {
   children?: React.ReactNode;
 }
 
+import { useState } from 'react';
+import Modal from './Modal';
+
 export default function Layout({ children }: LayoutProps) {
+  const [showModal, setShowModal] = useState(false);
+
   return (
     <div className="mx-auto flex flex-col space-y-4">
       <header className="container sticky top-0 z-40 bg-white">
@@ -15,6 +20,9 @@ export default function Layout({ children }: LayoutProps) {
           <nav className="ml-4 pl-6">
             <a href="#" className="hover:text-slate-600 cursor-pointer">
               Home
+            </a>
+            <a href="#" className="hover:text-slate-600 cursor-pointer ml-4" onClick={() => setShowModal(true)}>
+              Config
             </a>
           </nav>
         </div>
@@ -24,6 +32,7 @@ export default function Layout({ children }: LayoutProps) {
           {children}
         </main>
       </div>
+      {showModal && <Modal onClose={() => setShowModal(false)} />}
     </div>
   );
 }

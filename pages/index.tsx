@@ -174,7 +174,7 @@ export default function Home() {
       <Layout>
         <div className="mx-auto flex flex-col gap-4">
           <h1 className="text-2xl font-bold leading-[1.1] tracking-tighter text-center">
-            Chat With Your Legal Docs
+            你的私人助理
           </h1>
           <main className={styles.main}>
             <div className={styles.cloud}>
