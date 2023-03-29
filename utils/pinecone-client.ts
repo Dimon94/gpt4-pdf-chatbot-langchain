@@ -1,15 +1,18 @@
 import { PineconeClient } from '@pinecone-database/pinecone';
 
+// 检查环境变量是否存在
 if (!process.env.PINECONE_ENVIRONMENT || !process.env.PINECONE_API_KEY) {
   throw new Error('Pinecone environment or api key vars missing');
 }
 
+// 初始化 Pinecone 客户端
 async function initPinecone() {
   try {
     const pinecone = new PineconeClient();
 
+    // 初始化 Pinecone 客户端
     await pinecone.init({
-      environment: process.env.PINECONE_ENVIRONMENT ?? '', //this is in the dashboard
+      environment: process.env.PINECONE_ENVIRONMENT ?? '', // 这是在 Pinecone 仪表板中设置的
       apiKey: process.env.PINECONE_API_KEY ?? '',
     });
 
@@ -20,4 +23,5 @@ async function initPinecone() {
   }
 }
 
+// 导出 Pinecone 客户端
 export const pinecone = await initPinecone();

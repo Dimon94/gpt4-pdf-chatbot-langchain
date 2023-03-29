@@ -1,3 +1,8 @@
+/**
+ * Layout组件
+ * @param {React.ReactNode} children - 子组件
+ * @returns {JSX.Element} - 返回JSX元素
+ */
 interface LayoutProps {
   children?: React.ReactNode;
 }

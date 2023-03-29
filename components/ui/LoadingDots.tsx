@@ -1,5 +1,11 @@
 import styles from '@/styles/loading-dots.module.css';
 
+/**
+ * LoadingDots组件
+ * @param {string} color - 点的颜色
+ * @param {string} style - 组件样式
+ * @returns {JSX.Element} LoadingDots组件
+ */
 const LoadingDots = ({
   color = '#000',
   style = 'small',

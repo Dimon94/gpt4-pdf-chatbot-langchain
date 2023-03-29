@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/accordion';
 
 export default function Home() {
+  // 定义状态
   const [query, setQuery] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [sourceDocs, setSourceDocs] = useState<Document[]>([]);
@@ -44,7 +45,7 @@ export default function Home() {
     textAreaRef.current?.focus();
   }, []);
 
-  //handle form submission
+  // 处理表单提交
   async function handleSubmit(e: any) {
     e.preventDefault();
 
@@ -87,9 +88,9 @@ export default function Home() {
         }),
         signal: ctrl.signal,
         onmessage: (event) => {
-          if (event.data === '[DONE]') {
+          if (event.data === 'done') {
             setMessageState((state) => ({
-              history: [...state.history, [question, state.pending ?? '']],
+              ...state,
               messages: [
                 ...state.messages,
                 {
@@ -100,6 +101,7 @@ export default function Home() {
               ],
               pending: undefined,
               pendingSourceDocs: undefined,
+              history: [...state.history, [question, state.pending ?? '']],
             }));
             setLoading(false);
             ctrl.abort();
