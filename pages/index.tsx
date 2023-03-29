@@ -14,6 +14,10 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 
+/**
+ * 客户端 首页
+ * @returns 
+ */
 export default function Home() {
   // 定义状态
   const [query, setQuery] = useState<string>('');
@@ -28,7 +32,7 @@ export default function Home() {
   }>({
     messages: [
       {
-        message: 'Hi, what would you like to learn about this legal case?',
+        message: '你好，关于这个法律案件，你想了解什么？', // 初始消息
         type: 'apiMessage',
       },
     ],
@@ -52,7 +56,7 @@ export default function Home() {
     setError(null);
 
     if (!query) {
-      alert('Please input a question');
+      alert('Please input a question'); // 如果没有输入问题，弹出提示框
       return;
     }
 
@@ -63,13 +67,15 @@ export default function Home() {
       messages: [
         ...state.messages,
         {
-          type: 'userMessage',
-          message: question,
+          type: 'userMessage',// 用户消息类型
+          message: question,  // 用户消息内容
         },
       ],
       pending: undefined,
     }));
 
+    // 开始加载数据
+    console.log('开始加载数据');
     setLoading(true);
     setQuery('');
     setMessageState((state) => ({ ...state, pending: '' }));
@@ -77,7 +83,7 @@ export default function Home() {
     const ctrl = new AbortController();
 
     try {
-      fetchEventSource('/api/chat', {
+      fetchEventSource('/api/chat', {// 发送聊天请求
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -86,36 +92,37 @@ export default function Home() {
           question,
           history,
         }),
-        signal: ctrl.signal,
-        onmessage: (event) => {
-          if (event.data === 'done') {
+        signal: ctrl.signal,          // 将AbortController实例传递给signal参数
+        onmessage: (event) => {       // 处理服务器返回的消息
+          if (event.data === 'done') {// 如果服务器返回的消息是'done'
             setMessageState((state) => ({
               ...state,
               messages: [
                 ...state.messages,
                 {
-                  type: 'apiMessage',
-                  message: state.pending ?? '',
-                  sourceDocs: state.pendingSourceDocs,
+                  type: 'apiMessage',                 // API消息类型
+                  message: state.pending ?? '',       // API消息内容
+                  sourceDocs: state.pendingSourceDocs,// API消息源文档
                 },
               ],
               pending: undefined,
               pendingSourceDocs: undefined,
-              history: [...state.history, [question, state.pending ?? '']],
+              history: [...state.history, [question, state.pending ?? '']],// 更新聊天历史记录
             }));
             setLoading(false);
-            ctrl.abort();
-          } else {
-            const data = JSON.parse(event.data);
-            if (data.sourceDocs) {
+            ctrl.abort(); // 中止请求
+          } else {// 如果服务器返回的消息不是'done'
+            const data = JSON.parse(event.data);// 解析服务器返回的消息
+            console.log('服务器返回的消息: data', data);
+            if (data.sourceDocs) {// 如果消息包含源文档
               setMessageState((state) => ({
                 ...state,
-                pendingSourceDocs: data.sourceDocs,
+                pendingSourceDocs: data.sourceDocs,// 存储源文档
               }));
             } else {
               setMessageState((state) => ({
                 ...state,
-                pending: (state.pending ?? '') + data.data,
+                pending: (state.pending ?? '') + data.data,// 存储API消息内容
               }));
             }
           }
@@ -128,7 +135,7 @@ export default function Home() {
     }
   }
 
-  //prevent empty submissions
+  // 防止空提交
   const handleEnter = useCallback(
     (e: any) => {
       if (e.key === 'Enter' && query) {
@@ -155,7 +162,7 @@ export default function Home() {
     ];
   }, [messages, pending, pendingSourceDocs]);
 
-  //scroll to bottom of chat
+  // 滚动到聊天底部
   useEffect(() => {
     if (messageListRef.current) {
       messageListRef.current.scrollTop = messageListRef.current.scrollHeight;

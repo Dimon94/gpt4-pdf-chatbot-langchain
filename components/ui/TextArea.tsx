@@ -1,20 +1,11 @@
 import * as React from 'react';
 import { cn } from '@/utils/cn';
 
-/**
- * @component Textarea
- * @description 多行文本输入框
- * @param {TextareaProps} props - 继承自TextareaHTMLAttributes的props
- * @returns {React.ReactElement} - 返回多行文本输入框组件
- */
+export interface TextareaProps
+  extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {}
+
 const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
   ({ className, ...props }, ref) => {
-    /**
-     * @function cn
-     * @description 生成组件的className
-     * @param {string} className - 组件的className
-     * @returns {string} - 返回生成的className
-     */
     return (
       <textarea
         className={cn(

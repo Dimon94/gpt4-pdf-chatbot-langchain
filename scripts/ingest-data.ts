@@ -8,18 +8,25 @@ import { DirectoryLoader } from 'langchain/document_loaders';
 
 /* Name of directory to retrieve your files from */
 const filePath = 'docs';
-
+/**
+ * 从指定目录加载PDF文件，将其转换为文本，并将其嵌入Pinecone存储库中。
+ * @function
+ * @async
+ * @returns {Promise<void>}
+ * @throws {Error} 如果数据摄取失败，则抛出错误。
+ * @example
+ * await run();
+ */
 export const run = async () => {
   try {
-    /*load raw docs from the all files in the directory */
+    /* 从指定目录加载原始文档 */
     const directoryLoader = new DirectoryLoader(filePath, {
       '.pdf': (path) => new CustomPDFLoader(path),
     });
 
-    // const loader = new PDFLoader(filePath);
     const rawDocs = await directoryLoader.load();
 
-    /* Split text into chunks */
+    /* 将文本拆分成块 */
     const textSplitter = new RecursiveCharacterTextSplitter({
       chunkSize: 1000,
       chunkOverlap: 200,
@@ -29,11 +36,11 @@ export const run = async () => {
     console.log('split docs', docs);
 
     console.log('creating vector store...');
-    /*create and store the embeddings in the vectorStore*/
+    /* 创建并存储嵌入向量 */
     const embeddings = new OpenAIEmbeddings();
-    const index = pinecone.Index(PINECONE_INDEX_NAME); //change to your own index name
+    const index = pinecone.Index(PINECONE_INDEX_NAME);
 
-    //embed the PDF documents
+    // 将PDF文档嵌入向量
     await PineconeStore.fromDocuments(docs, embeddings, {
       pineconeIndex: index,
       namespace: PINECONE_NAME_SPACE,
@@ -45,6 +52,15 @@ export const run = async () => {
   }
 };
 
+/**
+ * 从指定目录加载PDF文件，将其转换为文本，并将其嵌入Pinecone存储库中。
+ * @function
+ * @async
+ * @returns {Promise<void>}
+ * @throws {Error} 如果数据摄取失败，则抛出错误。
+ * @example
+ * await run();
+ */
 (async () => {
   await run();
   console.log('ingestion complete');
