@@ -5,6 +5,7 @@ import { pinecone } from '@/utils/pinecone-client';
 import { CustomPDFLoader } from '@/utils/customPDFLoader';
 import { PINECONE_INDEX_NAME, PINECONE_NAME_SPACE } from '@/config/pinecone';
 import { DirectoryLoader } from 'langchain/document_loaders';
+import { CustomDOCLoader } from '../utils/customDOCLoader';
 
 /* Name of directory to retrieve your files from */
 const filePath = 'docs';
@@ -22,7 +23,9 @@ export const run = async () => {
     /* 从指定目录加载原始文档 */
     const directoryLoader = new DirectoryLoader(filePath, {
       '.pdf': (path) => new CustomPDFLoader(path),
+      '.docx': (path) => new CustomDOCLoader(path),
     });
+
 
     const rawDocs = await directoryLoader.load();
 
